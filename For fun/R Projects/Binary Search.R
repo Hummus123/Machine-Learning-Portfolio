@@ -1,4 +1,6 @@
-#This is a 
+# This is a binary search done in R. 
+# Using R's plotting capabilities to also plot the distance at
+# each step of the binary search.
 
 search2 <- function(list, item, returndata = FALSE) {
     min <- 0
@@ -18,11 +20,8 @@ search2 <- function(list, item, returndata = FALSE) {
         } else {
             return(cursor)
         }
-        }
     }
-
-
-
+}
 
 g <- list()
 
