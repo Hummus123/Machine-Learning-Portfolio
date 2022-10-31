@@ -1,0 +1,96 @@
+import random as rn
+import numpy as np
+import matplotlib.pyplot as plt
+print("hello")
+g = ["Land" for i in range(70)]
+for i in range(10):
+    g.append("Coast")
+for i in range(20):
+    g.append("Sea")
+testar = np.reshape(np.array(g), [10, 10])
+list = {"Land":1, "Coast":2, "Sea":3}
+plot = np.reshape(np.vectorize(list.get)(g), [10, -1])
+plt.imshow(plot)
+#plt.show()
+
+class rulemaker():
+    def __init__(self, inarr):
+        self._narray = np.array(inarr)
+        self.types = len(np.unique(inarr))
+
+    def _calculate_probability(self, index = (0, 0)):
+        prob_of_x = []
+        surroundingidx = [(-1,-1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
+        vals = []
+        for test in surroundingidx:
+            try:    
+                currentindex = tuple(map(sum, zip(test, index)))
+                if not(currentindex[0] < 0 or currentindex[1] < 0):
+                    vals.append(self._narray[currentindex])
+            except IndexError:
+                pass
+
+        for i in np.unique(self._narray):
+            prob_of_x.append((i, sum(i==np.array(vals))/len(vals)))
+        
+        return prob_of_x
+
+    def generate_rules(self):
+        returnedlis = []
+        
+        for i in range(np.shape(self._narray)[0]):
+            for b in range(np.shape(self._narray)[1]):
+                returnedlis.append(self._calculate_probability(index = (i, b)))
+        
+        return returnedlis
+
+    def averaging(self):
+        counter = [(val, np.sum(val == self._narray)) for val in np.unique(self._narray)]
+        intake = self.generate_rules()
+        finallis = []
+        previous = 0
+        for i in counter:
+            averages = []
+            for currentcheckedvalue in range(len(np.unique(self._narray))):
+                value = 0
+                for probs in intake[previous:previous + i[1]-1]:
+                    value += probs[currentcheckedvalue][1]
+                averages.append(value/counter[np.unique(self._narray).tolist().index(currentcheckedvalue+1)][1])
+            previous = previous + i[1]-1
+            finallis.append((i[0], averages))
+        return finallis
+    def makenewarraywithprobs__bad(self):
+        possibilities = np.unique(self._narray).tolist()
+        probs = self.averaging()
+        result = []
+        result2 = []
+        for num, probability in probs:
+            for b in probability:
+                for i in range(int(100*b)):
+                    result.append(num)
+        for i in range(len(self._narray)**2):
+            result2.append(rn.choice(result))
+
+        print(np.array(result2))
+        return np.array(result2)
+    def makenewarray__good(self):
+        #to do this I have to make everything exist in a superposition of its options, then collapse one randomly and let the effect ripple
+        print(" ")
+
+        
+
+
+
+
+
+
+            
+
+
+
+test = rulemaker(plot)
+
+listy = np.array(test.generate_rules())
+plt.imshow(np.reshape(test.makenewarraywithprobs__bad(), [10, -1]))
+plt.show()
+
