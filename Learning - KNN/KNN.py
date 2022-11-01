@@ -145,6 +145,3 @@ plt.figure(figsize= (10,6))
 plt.plot(k_list, acc, 'ro--', linewidth=2)
 plt.xlabel("k")
 plt.ylabel("accuracy")
-
-
-#messy! best acc ~85% best k ~65 or ~19
